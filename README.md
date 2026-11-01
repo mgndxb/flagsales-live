@@ -4,6 +4,8 @@
 
 **Try it:** https://magnus.is-a.dev/flagsales-live/
 
+[![FlagSales Live: the seller app at rank one, a live team leaderboard, and the database refusing attempts to cheat](docs/preview.webp)](https://magnus.is-a.dev/flagsales-live/)
+
 ## The story
 
 A field-sales team of about 20 counted its sales by reading a WhatsApp chat: someone scrolled through every message to work out who sold what and for how much. I built them an app where each seller signs in with a name and PIN and logs each sale from a product list. They used it every day for over a year. This repository is a clean rebuild for my portfolio: none of the original code or data is in it.
@@ -30,9 +32,11 @@ TypeScript, React 19, Vite, Tailwind CSS v4, PGlite (PostgreSQL 18 + pgcrypto), 
 ```bash
 npm install
 npm run dev      # http://localhost:5173/flagsales-live/
-npm test         # the rules, tested against real Postgres
+npm test         # 10 tests: the rules, run against real Postgres
 npm run verify   # typecheck + tests + production build
 ```
+
+Every push to `main` runs `npm run verify` in GitHub Actions, and the site only deploys if it passes.
 
 The schema is one file: [`src/db/schema.sql`](src/db/schema.sql).
 
