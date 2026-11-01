@@ -37,3 +37,5 @@ npm run verify   # typecheck + tests + production build
 The schema is one file: [`src/db/schema.sql`](src/db/schema.sql).
 
 Built by [Magnus Kaur](https://magnus.is-a.dev).
+
+**Sound:** the same generative ambient music as [magnus.is-a.dev](https://magnus.is-a.dev), synthesised with the Web Audio API (no audio files). The portfolio and its Lab projects share one origin, so the on/off choice follows you between them.

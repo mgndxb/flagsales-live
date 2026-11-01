@@ -6,7 +6,9 @@ import { BreakIt, Leaderboard, QueryConsole, RecentFeed, TeamPanel } from "./boa
 import schema from "./db/schema.sql?raw";
 import { pickProduct, TEAMMATES } from "./db/seed";
 import { SalesDb, type ActivityKind, type Day, type LeaderRow, type Product, type QueryLog, type RecentSale } from "./lib/db";
+import { sound } from "./lib/sound";
 import { euro, LeadHome, PhoneFrame, pts, SavedSheet, SellerHome, SignIn } from "./phone";
+import { SoundEffects, SoundToggle } from "./sound";
 
 interface Session {
   token: string;
@@ -104,9 +106,11 @@ export function App() {
       sessionRef.current = next;
       setSession(next);
       setSignInError(null);
+      sound.success();
       await refresh(db);
     } catch (error) {
       setSignInError(error instanceof Error ? error.message : String(error));
+      sound.refuse();
     } finally {
       setBusy(false);
     }
@@ -134,6 +138,7 @@ export function App() {
     setSaving(true);
     try {
       const totals = await db.logSales(session.token, items);
+      sound.confirm();
       setSaved({
         ...totals,
         lines: items.map((item) => {
@@ -158,7 +163,8 @@ export function App() {
   const attempt = async (id: string) => {
     const token = visitorToken.current;
     if (!db || !token) return;
-    const ignore = () => undefined;
+    // Every refusal gets the same low, muted note the portfolio uses for "the database said no".
+    const ignore = () => sound.refuse();
     if (id === "insert") {
       await db.run("insert into sales (seller_id, product_id, quantity, points, euros) values (1, 1, 1, 999, 999)").catch(ignore);
     } else if (id === "price") {
@@ -207,11 +213,13 @@ export function App() {
 
   return (
     <div className="min-h-dvh">
+      <SoundEffects />
       <header className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 pt-6 md:px-8">
         <p className="font-display text-[15px] font-semibold tracking-[-0.02em]">
           FlagSales <span className="text-brand">Live</span>
         </p>
         <nav className="flex gap-2 text-[13px]">
+          <SoundToggle className="rounded-full border border-line px-3.5 py-1.5 font-mono text-[12px] text-ash hover:text-bone" bar="bg-bone" />
           <a href="https://github.com/mgndxb/flagsales-live" className="rounded-full border border-line px-3.5 py-1.5 text-ash hover:text-bone">
             Source
           </a>
