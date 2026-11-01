@@ -64,6 +64,13 @@ export function minutesSinceTen(now = new Date()): number {
 
 const num = (value: unknown) => Number(value ?? 0);
 
+/** One row is shown in full (that's where the interesting answer is); more are counted. */
+function summarise(rows: unknown[]): string {
+  if (rows.length !== 1) return `${rows.length} rows`;
+  const entries = Object.entries(rows[0] as Record<string, unknown>);
+  return entries.length ? entries.map(([key, value]) => `${key} = ${value ?? "null"}`).join(", ") : "done";
+}
+
 /**
  * Every call goes through `run`, which records the SQL and what Postgres said,
  * so the page can show exactly what happened behind each tap.
@@ -93,7 +100,7 @@ export class SalesDb {
     const shown = params.reduce<string>((text, value, i) => text.replace(`$${i + 1}`, typeof value === "string" ? `'${value}'` : String(value)), sql);
     try {
       const result = await this.pg.query<T>(sql, params);
-      if (options.log !== false) this.emit({ sql: shown, ok: true, result: `${result.rows.length} row${result.rows.length === 1 ? "" : "s"}`, ms: performance.now() - started });
+      if (options.log !== false) this.emit({ sql: shown, ok: true, result: summarise(result.rows), ms: performance.now() - started });
       return result.rows;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

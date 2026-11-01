@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  --color-void: #07090c;
+  --color-surface: #0e1217;
+  --color-raised: #151a21;
+  --color-bone: #eef0f2;
+  --color-ash: #98a0aa;
+  --color-dim: #5d6570;
+  --color-line: rgb(238 240 242 / 0.09);
+  --color-brand: #3a9be0;
+  --color-mint: #46e39b;
+  --color-amber: #ffbe55;
+  --color-red: #ff5a4a;
+
+  --font-display: "Unbounded", system-ui, sans-serif;
+  --font-sans: "Geist", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 600px at 20% -10%, rgb(58 155 224 / 0.16), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgb(70 227 155 / 0.07), transparent 60%),
+    var(--color-void);
+  color: var(--color-bone);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .card {
+    background: rgb(14 18 23 / 0.8);
+    border: 1px solid var(--color-line);
+    border-radius: 22px;
+  }
+
+  .tap {
+    transition: transform 160ms var(--ease-out-expo), background-color 200ms ease, opacity 200ms ease;
+  }
+  .tap:active {
+    transform: scale(0.95);
+  }
+
+  .step {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--color-line);
+    font-size: 18px;
+    line-height: 1;
+  }
+  .step:disabled {
+    opacity: 0.3;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 1.6rem;
+    padding: 0 0.6rem;
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 420ms var(--ease-out-expo) both;
+}
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    transform: none;
+  }
+}
+.pop {
+  animation: pop 520ms var(--ease-out-expo) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .pop {
+    animation: none;
+  }
+}
